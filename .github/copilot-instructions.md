@@ -6,8 +6,8 @@ This repository contains **Shop_OnlineCredits**, a SourcePawn plugin for SourceM
 
 **Key Facts:**
 - **Language**: SourcePawn
-- **Platform**: SourceMod 1.11+ (specified in sourceknight.yaml)
-- **Build System**: SourceKnight (not manual spcomp)
+- **Platform**: SourceMod 1.12.x (built via GitHub Actions)
+- **Build System**: Native GitHub Actions workflow using `rumblefrog/setup-sp` + `spcomp` (no SourceKnight)
 - **Plugin Type**: Shop ecosystem extension
 - **Complexity**: Simple menu-based plugin (~83 lines)
 
@@ -19,34 +19,34 @@ This repository contains **Shop_OnlineCredits**, a SourcePawn plugin for SourceM
 │   └── dependabot.yml            # Dependency updates for GitHub Actions
 ├── addons/sourcemod/scripting/
 │   └── Shop_OnlineCredits.sp     # Main plugin source file
-├── sourceknight.yaml             # Build configuration and dependencies
-└── .gitignore                    # Excludes build artifacts (.smx, .sourceknight/, etc.)
+└── .gitignore                    # Excludes build artifacts (.smx, etc.)
 ```
 
-## Build System: SourceKnight
+## Build System: GitHub Actions
 
-**IMPORTANT**: This project uses SourceKnight, not manual compilation with spcomp.
+**IMPORTANT**: This project builds via `.github/workflows/ci.yml`, not SourceKnight.
 
-### Build Configuration (`sourceknight.yaml`)
-- **Output Directory**: `/addons/sourcemod/plugins`
-- **Dependencies**: SourceMod 1.11.0-git6934 + Shop Core plugin
+### Build Configuration (`.github/workflows/ci.yml`)
+- **Compiler**: `rumblefrog/setup-sp@v1.3.1`, SourceMod 1.12.x
+- **Dependencies**: Shop Core plugin includes, cloned directly from `srcdslab/sm-plugin-Shop-Core`
 - **Target**: `Shop_OnlineCredits` (produces Shop_OnlineCredits.smx)
 
 ### Build Commands
 ```bash
-# Build the plugin (use in CI or local development)
-sourceknight build
+# CI builds automatically on push/PR/workflow_dispatch (see .github/workflows/ci.yml)
 
-# The build system automatically:
-# 1. Downloads SourceMod and Shop Core dependencies
-# 2. Compiles Shop_OnlineCredits.sp to Shop_OnlineCredits.smx
-# 3. Places output in /addons/sourcemod/plugins/
+# To build locally:
+# 1. Install spcomp (SourceMod 1.12.x)
+# 2. Clone srcdslab/sm-plugin-Shop-Core and copy its scripting/include/* into
+#    addons/sourcemod/scripting/include/
+# 3. From addons/sourcemod/scripting/, run:
+#    spcomp -i include -o ../plugins/Shop_OnlineCredits.smx Shop_OnlineCredits.sp
 ```
 
 ### Dependency Management
-- **SourceMod**: Auto-downloaded from AlliedMods (version locked)
-- **Shop Core**: Auto-downloaded from srcdslab/sm-plugin-Shop-Core
-- Include files are automatically linked from dependencies
+- **SourceMod**: Provided by the `rumblefrog/setup-sp` action (version pinned in ci.yml)
+- **Shop Core**: Cloned directly from srcdslab/sm-plugin-Shop-Core during CI
+- Include files are copied into `addons/sourcemod/scripting/include/` before compiling
 
 ## Shop Plugin Ecosystem Context
 
@@ -99,7 +99,7 @@ PlayerList.Close();                // Always clean up (done in MenuAction_End)
 
 ### Making Changes
 1. **Edit Source**: Modify `/addons/sourcemod/scripting/Shop_OnlineCredits.sp`
-2. **Build Locally**: Run sourceknight build (if available)
+2. **Build Locally**: Compile with spcomp (see Build Commands above), or push to trigger CI
 3. **Test**: Deploy .smx to test server with Shop Core plugin
 4. **Commit**: Changes trigger CI/CD pipeline
 
@@ -117,7 +117,7 @@ PlayerList.Close();                // Always clean up (done in MenuAction_End)
 ## CI/CD Pipeline (`.github/workflows/ci.yml`)
 
 ### Automated Workflow
-1. **Build**: SourceKnight compiles plugin on Ubuntu
+1. **Build**: GitHub Actions compiles plugin with spcomp on Ubuntu
 2. **Package**: Creates distribution package
 3. **Tag**: Auto-creates 'latest' tag on main/master
 4. **Release**: Uploads .tar.gz with compiled plugin
@@ -205,7 +205,7 @@ if (client > 0 && IsClientInGame(client) && !IsFakeClient(client) && Shop_IsAuth
 ### Common Issues
 1. **Shop Core Missing**: Plugin won't register menu items
 2. **Permission Errors**: Check `Shop_IsAuthorized()` calls
-3. **Build Failures**: Check sourceknight.yaml dependencies
+3. **Build Failures**: Check `.github/workflows/ci.yml` dependency steps
 4. **Menu Errors**: Ensure `menu.Close()` in `MenuAction_End`
 
 ### Debugging Tools
@@ -245,8 +245,8 @@ if (client > 0 && IsClientInGame(client) && !IsFakeClient(client) && Shop_IsAuth
 ## Quick Reference Commands
 
 ```bash
-# Build plugin locally (if SourceKnight available)
-sourceknight build
+# Build plugin locally (requires spcomp + Shop-Core includes, see Build Commands above)
+spcomp -i include -o ../plugins/Shop_OnlineCredits.smx Shop_OnlineCredits.sp
 
 # Check git status
 git status
@@ -261,8 +261,8 @@ git status
 
 ## Important Notes for AI Coding Agents
 
-1. **Build System**: Always use SourceKnight, never manual spcomp commands
-2. **Dependencies**: Don't modify sourceknight.yaml unless adding new dependencies
+1. **Build System**: Build runs via GitHub Actions (`.github/workflows/ci.yml`) using spcomp
+2. **Dependencies**: Don't modify ci.yml dependency-clone steps unless adding new dependencies
 3. **Code Style**: Follow existing patterns exactly (tabs, naming, structure)
 4. **Testing**: No automated tests - verify by deploying to test server
 5. **Minimal Changes**: This is a simple, working plugin - avoid over-engineering
