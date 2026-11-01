@@ -1,0 +1,45 @@
+"Phrases"
+{
+	"Online Credits Function"
+	{
+		"en"		"Online players credits"
+		"fr"		"Crédits des joueurs en ligne"
+		"ru"		"Кредиты игроков онлайн"
+		"es"		"Créditos de los jugadores conectados"
+		"de"		"Credits der Online-Spieler"
+		"pt"		"Créditos dos jogadores online"
+		"chi"		"在线玩家积分"
+	}
+	"Online Credits Title"
+	{
+		"en"		"Online players credits:"
+		"fr"		"Crédits des joueurs en ligne :"
+		"ru"		"Кредиты игроков онлайн:"
+		"es"		"Créditos de los jugadores conectados:"
+		"de"		"Credits der Online-Spieler:"
+		"pt"		"Créditos dos jogadores online:"
+		"chi"		"在线玩家积分："
+	}
+	"Online Credits Item Gold"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"{1} ({2} cr. | {3} gold)"
+		"fr"		"{1} ({2} cr. | {3} or)"
+		"ru"		"{1} ({2} кр. | {3} золота)"
+		"es"		"{1} ({2} cr. | {3} oro)"
+		"de"		"{1} ({2} Cr. | {3} Gold)"
+		"pt"		"{1} ({2} cr. | {3} ouro)"
+		"chi"		"{1}（{2} 积分 | {3} 金币）"
+	}
+	"Online Credits Item"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"{1} ({2} cr.)"
+		"fr"		"{1} ({2} cr.)"
+		"ru"		"{1} ({2} кр.)"
+		"es"		"{1} ({2} cr.)"
+		"de"		"{1} ({2} Cr.)"
+		"pt"		"{1} ({2} cr.)"
+		"chi"		"{1}（{2} 积分）"
+	}
+}

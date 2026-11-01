@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.5.1"
 
 bool canUseGold;
 
@@ -18,6 +18,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("Shop_OnlineCredits.phrases");
+
 	if (Shop_IsStarted()) Shop_Started();
 	
 	canUseGold = (CanTestFeatures() && GetFeatureStatus(FeatureType_Native, "Shop_GetClientGold") == FeatureStatus_Available);
@@ -41,13 +43,13 @@ public void OnPluginEnd()
 
 public int OnFuncDisplay(int client, char[] buffer, int maxlength)
 {
-	FormatEx(buffer, maxlength, "Online players credits");
+	FormatEx(buffer, maxlength, "%T", "Online Credits Function", client);
 }
 
 public bool OnFuncSelect(int client)
 {
 	Menu PlayerList = new Menu(PlayerList_Handler);
-	PlayerList.SetTitle("Online players credits:");
+	PlayerList.SetTitle("%T", "Online Credits Title", client);
 	int credits, gold;
 	char buffer[PLATFORM_MAX_PATH];
 	for (int i = 1; i <= MaxClients; ++i)
@@ -58,10 +60,10 @@ public bool OnFuncSelect(int client)
 			if (canUseGold)
 			{
 				gold = Shop_GetClientGold(i);
-				FormatEx(buffer, sizeof(buffer), "%N (%d cr. | %d gold)", i, credits, gold);
+				FormatEx(buffer, sizeof(buffer), "%T", "Online Credits Item Gold", client, i, credits, gold);
 			}
 			else
-				FormatEx(buffer, sizeof(buffer), "%N (%d cr.)", i, credits);
+				FormatEx(buffer, sizeof(buffer), "%T", "Online Credits Item", client, i, credits);
 			PlayerList.AddItem(buffer, buffer, ITEMDRAW_DISABLED);
 		}
 	}
